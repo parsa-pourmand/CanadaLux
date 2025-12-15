@@ -1,0 +1,29 @@
+{
+  "expo": {
+    "name": "CanadaLux",
+    "slug": "CanadaLux",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./app/assets/icon-512.png",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./app/assets/icon-512.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./app/assets/icon-512.png",
+        "backgroundColor": "#ffffff"
+      },
+      "edgeToEdgeEnabled": true
+    },
+    "web": {
+      "favicon": "./app/assets/icon-512.png"
+    }
+  }
+}
