@@ -14,8 +14,7 @@ export default function ListItem(props) {
                 {props.subTitle && <Text style={styles.subTitle} numberOfLines={2}>{props.subTitle}</Text>}
             </View>
         
-        {props.chevrons && <Icon name="chevron-right" iconColor={colors.medium} backgroundColor/>}
-        
+        {props.chevrons && <Icon name="chevron-right" iconColor={colors.medium} backgroundColor={colors.white}/>}
         
     </View>
     </TouchableHighlight>
@@ -41,7 +40,7 @@ const styles = StyleSheet.create({
     title:{
         marginTop:5,
         fontSize:16,
-        fontWeight:500
+        fontWeight:'500'
     },
     subTitle:{
         marginTop:5,

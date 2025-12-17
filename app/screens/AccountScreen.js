@@ -14,21 +14,28 @@ const user = {
 
 const items = [
     {
-        id:1,
-        title:"My Invoices",
-        icon: <Icon name="format-list-bulleted" iconColor={colors.white} backgroundColor={colors.black}/>,
+        id: 1,
+        title: "My Invoices",
+        icon: {
+        name: "format-list-bulleted",
+        backgroundColor: colors.black,
+        },
+        targetScreen: "Invoice",
     },
     {
-        id:2,
-        title:"My Orders",
-        icon: <Icon name="email" iconColor={colors.white} backgroundColor={colors.black}/>,
-
+        id: 2,
+        title: "My Orders",
+        icon: {
+        name: "email",
+        backgroundColor: colors.black,
+        },
+        targetScreen: "Order",
     },
-]
+];
 
-function AccountScreen(props) {
+function AccountScreen({navigation}) {
   return (
-    <Screen style={styles.screen}>
+    <View style={styles.screen}>
         <View style={styles.profileContainer}>
             <ListItem image={user.image} title={user.name} subTitle={user.email}/>
         </View>
@@ -38,7 +45,16 @@ function AccountScreen(props) {
             <FlatList
                 data={items}
                 keyExtractor={item=>item.id.toString()}
-                renderItem={({item}) =><ListItem title={item.title} IconComponent={item.icon} />}
+                renderItem={({item}) =><ListItem title={item.title} IconComponent={<Icon
+                                                                                    name={item.icon.name}
+                                                                                    iconColor={colors.white}
+                                                                                    backgroundColor={item.icon.backgroundColor}
+                                                                                    />
+                                                                                } 
+                    onPress={
+                        ()=>{navigation.navigate(item.targetScreen)}
+                    }
+                    />}
                 ItemSeparatorComponent={ListItemSeparator} 
             />
         </View>
@@ -47,7 +63,7 @@ function AccountScreen(props) {
             <ListItem title="Log Out" IconComponent={<Icon name="logout" iconColor={colors.white} backgroundColor={colors.primary}/>}/>
         </View>
 
-    </Screen>
+    </View>
   );
 }
 
@@ -58,7 +74,7 @@ const styles = StyleSheet.create({
     },
     profileContainer:{
         width:"100%",
-        marginVertical:20,
+        marginBottom:5,
         padding:5,
         backgroundColor:colors.white
     },

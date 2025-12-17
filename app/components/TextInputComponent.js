@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
     backgroundColor:colors.light
   },
   text:{
-    color:colors.dakr,
+    color:colors.dark,
     fontSize:18,
     fontFamily: Platform.OS === "android" ? "Roboto" : "Avenir"
     }
