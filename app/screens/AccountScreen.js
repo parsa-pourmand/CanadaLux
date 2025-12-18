@@ -29,7 +29,7 @@ const items = [
         name: "email",
         backgroundColor: colors.black,
         },
-        targetScreen: "Order",
+        targetScreen: "Orders",
     },
 ];
 
