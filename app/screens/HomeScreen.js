@@ -1,10 +1,18 @@
 import React from 'react';
 import { View, StyleSheet, Text } from 'react-native';
+import CardComponent from '../components/CardComponent';
 
-function HomeScreen(props) {
+const point={
+  point:200,
+  worth:50
+}
+
+function HomeScreen({navigation}) {
   return (
     <View style={styles.container}>
-        <Text>Home Screen</Text>
+        <CardComponent image={require('../assets/star.png')} title={point.point} subTitle={`worth up to $${point.worth}`}
+            onPress={() => navigation.navigate("Points")}
+        />
     </View>
   );
 }

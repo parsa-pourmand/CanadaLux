@@ -5,11 +5,21 @@ import { Form } from 'formik';
 import FormFieldComponent from '../components/form/FormFieldComponent';
 import SubmitButton from '../components/form/SubmitButton';
 import colors from '../config/colors';
+import FormImageInputList from '../components/FormImageInputList';
 
 function OrderScreen(props) {
   return (
     <View style={styles.container}>
-      <FormComponent initialValues={{ orderDetails: '' }} onSubmit={(values, {resetForm}) => {console.log(values) ; resetForm();}}>
+      <FormComponent initialValues={{ orderDetails: '', images:[], title: '' }} onSubmit={(values, {resetForm}) => {console.log(values) ; resetForm();}}>
+        
+        <FormImageInputList name="images" />
+
+        <FormFieldComponent
+          name="title"
+          placeholder="Title (SKU, Item Name, etc.)"
+          maxLength={255}
+        />
+
         <FormFieldComponent
           name="orderDetails"
           placeholder="Enter order details here."
