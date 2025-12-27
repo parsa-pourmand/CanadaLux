@@ -2,10 +2,10 @@ import React from 'react';
 import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import colors from '../config/colors';
 
-function ButtonComponent(props) {
+function ButtonComponent({onPress, title, color = "black", textColor = "white"}) {
   return (
-    <TouchableOpacity onPress={props.onPress} style={[styles.container, {backgroundColor: colors[props.color]}]}>
-      <Text style={styles.text}>{props.title}</Text>
+    <TouchableOpacity onPress={onPress} style={[styles.container, {backgroundColor: colors[color]}]}>
+      <Text style={[styles.text, {color: colors[textColor]}]}>{title}</Text>
     </TouchableOpacity>
   );
 }

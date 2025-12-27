@@ -10,8 +10,12 @@ const point={
 function HomeScreen({navigation}) {
   return (
     <View style={styles.container}>
-        <CardComponent image={require('../assets/star.png')} title={point.point} subTitle={`worth up to $${point.worth}`}
+        <CardComponent image={require('../assets/star.png')} title={`Available Points: ${point.point}`} subTitle={`worth up to $${point.worth}`}
             onPress={() => navigation.navigate("Points")}
+        />
+
+        <CardComponent image={require('../assets/Featured_Products.png')} title="Featured Products"
+            onPress={() => navigation.navigate("FeaturedProducts")}
         />
     </View>
   );
