@@ -6,13 +6,23 @@ export default function CardComponent(props) {
   return (
     <TouchableWithoutFeedback onPress={props.onPress}>
     <View style = {styles.card}>
-      <Image
+      {props.cover ? 
+          <Image
+          source={props.image}
+          style={styles.image}
+          contentFit="cover"
+          transition={300}
+          placeholder={{ uri: props.thumbnailUrl }}
+        /> :
+        <Image
           source={props.image}
           style={styles.image}
           contentFit="contain"
           transition={300}
           placeholder={{ uri: props.thumbnailUrl }}
         />
+        }
+      
       <View style={styles.textContainer}>
         <Text style={styles.title} numberOfLines={1}>{props.title}</Text>
         {props.subTitle && <Text style={styles.subtitle} numberOfLines={2}>{props.subTitle}</Text>}

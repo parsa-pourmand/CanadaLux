@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet, ScrollView } from 'react-native';
 import CardComponent from '../components/CardComponent';
 
 const point={
@@ -9,7 +9,7 @@ const point={
 
 function HomeScreen({navigation}) {
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
         <CardComponent image={require('../assets/star.png')} title={`Available Points: ${point.point}`} subTitle={`worth up to $${point.worth}`}
             onPress={() => navigation.navigate("Points")}
         />
@@ -17,12 +17,14 @@ function HomeScreen({navigation}) {
         <CardComponent image={require('../assets/Featured_Products.png')} title="Featured Products"
             onPress={() => navigation.navigate("FeaturedProducts")}
         />
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {}
+  container: {
+    paddingBottom: 20,
+  }
 });
 
 export default HomeScreen;
