@@ -17,6 +17,9 @@ function HomeScreen({navigation}) {
         <CardComponent image={require('../assets/Featured_Products.png')} title="Featured Products"
             onPress={() => navigation.navigate("FeaturedProducts")}
         />
+        <CardComponent image={require('../assets/Promotion.jpg')} title="Promotions"
+            onPress={() => navigation.navigate("Promotions")}
+        />
     </ScrollView>
   );
 }

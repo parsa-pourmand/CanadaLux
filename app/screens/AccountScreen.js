@@ -31,6 +31,15 @@ const items = [
         },
         targetScreen: "Orders",
     },
+    {
+        id: 3, 
+        title: "Payments",
+        icon: {
+        name: "credit-card",
+        backgroundColor: colors.black,
+        },
+        targetScreen: "Payments",
+    }
 ];
 
 function AccountScreen({navigation}) {
