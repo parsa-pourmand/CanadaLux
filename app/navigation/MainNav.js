@@ -3,6 +3,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import FeedNavigator from './FeedNavigator';
 import OrderScreen from '../screens/OrderScreen';
 import AccountNavigator from './AccountNavigator';
+import NewOrderButton from './NewOrderButton';
 
 const Tab = createBottomTabNavigator();
 
@@ -23,9 +24,10 @@ function MainNav () {
         component={OrderScreen}
         options={{
             headerShown: true,
-            tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="cart" size={size} color={color} />
+            tabBarIcon: ({ size, color }) => (
+              <MaterialCommunityIcons name="cart" size={size} color={"white"} />
             ),
+            tabBarButton: (props) => <NewOrderButton {...props} />,
         }}
       />
       <Tab.Screen
