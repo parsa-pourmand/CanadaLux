@@ -2,13 +2,12 @@ import React from 'react';
 import { View, StyleSheet, ImageBackground, Image } from 'react-native';
 import ButtonComponent from '../components/ButtonComponent';
 
-function WelcomeScreen(props) {
+function WelcomeScreen({navigation}) {
   return (
     <ImageBackground source={require("../assets/White.jpg")} style={styles.background} >
         <View style={styles.container}>
-            <ButtonComponent title="LOGIN" color="black"/>
-            <ButtonComponent title="REGISTER" color="black"/>
-
+            <ButtonComponent title="LOGIN" color="black" onPress={() => navigation.navigate("Login")}/>
+            <ButtonComponent title="REGISTER" color="black" onPress={() => navigation.navigate("Register")}/>
         </View>
     </ImageBackground>
   );

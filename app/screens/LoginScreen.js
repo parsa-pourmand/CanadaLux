@@ -1,65 +1,93 @@
-import React from 'react';
-import { View, StyleSheet, Image } from 'react-native';
-import * as Yup from 'yup'
+import React, { useContext, useState } from 'react';
+import AuthContext from '../context/AuthContext';
+import { View, StyleSheet, Image, Text } from 'react-native';
+import * as Yup from 'yup';
 
+import Screen from '../components/Screen';
+import FormComponent from '../components/form/FormComponent';
+import FormFieldComponent from '../components/form/FormFieldComponent';
+import SubmitButton from '../components/form/SubmitButton';
 
-import Screen from '../components/Screen'
-import FormComponent from '../components/form/FormComponent'
-import FormFieldComponent from '../components/form/FormFieldComponent'
-import SubmitButton from '../components/form/SubmitButton'
+import { login } from '../api/auth';
+import { storeAuth } from '../auth/storage';
+import { setAuthToken } from '../api/client';
 
 const validationSchema = Yup.object().shape({
+  email: Yup.string().required().email().label('Email'),
+  password: Yup.string().required().min(5).label('Password'),
+});
 
-    email: Yup.string().required().email().label("Email"),
-    password: Yup.string().required().min(5).label("Password"),
-})
+function LoginScreen({ navigation }) {
+  const [error, setError] = useState('');
+  const authContext = useContext(AuthContext);
 
-function LoginScreen(props) {
+  const handleLogin = async (userInfo) => {
+    try {
+      setError('');
 
-    const handleLogin = (userInfo)=>{
-        console.log(userInfo.email)
+      const response = await login(userInfo.email, userInfo.password);
+      const { token, user } = response.data;
+
+      await storeAuth(token, user);
+      setAuthToken(token);
+      authContext.setUser(user);
+
+    } catch (err) {
+      setError(err.response?.data || 'Login failed. Please try again.');
     }
+  };
 
   return (
     <Screen style={styles.container}>
-        
-        <Image source={require('../assets/icon-512.png')} style={styles.logo}/>
-    
-        <FormComponent initialValues={{email:'', password:''}} onSubmit={handleLogin} validationSchema={validationSchema}>
-            <FormFieldComponent 
-                name="email"
-                icon="email"
-                placeholder="Email"
-                keyboardType="email-address"
-                textContentType="emailAddress"
-                autoCorrect={false}
-                autoCapitalize="none"
-            />
+      <Image source={require('../assets/icon-512.png')} style={styles.logo} />
 
-            <FormFieldComponent
-                name="password"
-                icon="lock"
-                placeholder="Password"
-                textContentType="password"
-                autoCorrect={false}
-                autoCapitalize="none"
-                secureTextEntry
-            />
-            <SubmitButton title="LOGIN"/>
-        </FormComponent>
+      {error ? <Text style={styles.error}>{error}</Text> : null}
+
+      <FormComponent
+        initialValues={{ email: '', password: '' }}
+        onSubmit={handleLogin}
+        validationSchema={validationSchema}
+      >
+        <FormFieldComponent
+          name="email"
+          icon="email"
+          placeholder="Email"
+          keyboardType="email-address"
+          textContentType="emailAddress"
+          autoCorrect={false}
+          autoCapitalize="none"
+        />
+
+        <FormFieldComponent
+          name="password"
+          icon="lock"
+          placeholder="Password"
+          textContentType="password"
+          autoCorrect={false}
+          autoCapitalize="none"
+          secureTextEntry
+        />
+
+        <SubmitButton title="LOGIN" />
+      </FormComponent>
     </Screen>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    padding:10
+    padding: 10,
   },
-  logo:{
-    height:150,
-    width:150,
-    alignSelf:'center'
-  }
+  logo: {
+    height: 150,
+    width: 150,
+    alignSelf: 'center',
+  },
+  error: {
+    color: 'red',
+    textAlign: 'center',
+    marginBottom: 10,
+  },
 });
 
 export default LoginScreen;
