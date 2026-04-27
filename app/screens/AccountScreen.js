@@ -1,4 +1,4 @@
-import {React, useContext} from 'react';
+import React, {useContext} from 'react';
 import { View, StyleSheet, FlatList } from 'react-native';
 import AuthContext from '../context/AuthContext';
 import Icon from '../components/Icon';
@@ -34,7 +34,16 @@ const items = [
         targetScreen: "Orders",
     },
     {
-        id: 3, 
+        id: 3,
+        title: "My Quotes",
+        icon: {
+        name: "file-document-edit",
+        backgroundColor: colors.black,
+        },
+        targetScreen: "Quotes",
+    },
+    {
+        id: 4, 
         title: "Payments",
         icon: {
         name: "credit-card",

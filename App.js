@@ -7,6 +7,7 @@ import AuthNavigator from './app/navigation/AuthNavigator';
 import AuthContext from './app/context/AuthContext';
 import { getToken, getUser, removeAuth } from './app/auth/storage';
 import { setAuthToken } from './app/api/client';
+import { getMe } from './app/api/users';
 
 export default function App() {
   const [user, setUser] = useState(null);
@@ -15,16 +16,30 @@ export default function App() {
   const restoreAuth = async () => {
     try {
       const token = await getToken();
-      const storedUser = await getUser();
 
-      if (token && storedUser) {
+      if (token) {
         setAuthToken(token);
-        setUser(storedUser);
+
+        const response = await getMe();
+        setUser(response.data);
       }
     } catch (err) {
-      console.log('Failed to restore auth:', err);
+      await removeAuth();
+      setAuthToken(null);
+      setUser(null);
     } finally {
       setIsReady(true);
+    }
+  };
+
+  const refreshUser = async () => {
+    try {
+      const response = await getMe();
+      setUser(response.data);
+      return response.data;
+    } catch (err) {
+      console.log('Failed to refresh user:', err.response?.data || err.message);
+      return null;
     }
   };
 
@@ -46,7 +61,7 @@ export default function App() {
 
   return (
     <SafeAreaProvider>
-      <AuthContext.Provider value={{ user, setUser: logIn, logOut }}>
+      <AuthContext.Provider value={{ user, setUser: logIn, logOut, refreshUser }}>
         <NavigationContainer>
           {user ? <MainNav /> : <AuthNavigator />}
         </NavigationContainer>

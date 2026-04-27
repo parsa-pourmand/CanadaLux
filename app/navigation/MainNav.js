@@ -1,7 +1,7 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import FeedNavigator from './FeedNavigator';
-import OrderScreen from '../screens/OrderScreen';
+import QuoteScreen from '../screens/QuoteScreen';
 import AccountNavigator from './AccountNavigator';
 import NewOrderButton from './NewOrderButton';
 
@@ -20,12 +20,12 @@ function MainNav () {
         }}
       />
       <Tab.Screen
-        name="Order"
-        component={OrderScreen}
+        name="Quote"
+        component={QuoteScreen}
         options={{
             headerShown: true,
             tabBarIcon: ({ size, color }) => (
-              <MaterialCommunityIcons name="cart" size={size} color={"white"} />
+              <MaterialCommunityIcons name="file-document-edit" size={size} color={"white"} />
             ),
             tabBarButton: (props) => <NewOrderButton {...props} />,
         }}
