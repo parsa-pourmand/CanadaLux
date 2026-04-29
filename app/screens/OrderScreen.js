@@ -9,6 +9,7 @@ import {
   Alert,
   ActivityIndicator,
   Modal,
+  Image
 } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 
@@ -49,6 +50,10 @@ function OrderScreen() {
   const [createdOrder, setCreatedOrder] = useState(null);
   const [submittedItems, setSubmittedItems] = useState([]);
 
+  const [itemSearch, setItemSearch] = useState('');
+  const [imageModalVisible, setImageModalVisible] = useState(false);
+  const [selectedImageItem, setSelectedImageItem] = useState(null);
+
   const loadData = async () => {
     try {
       setLoading(true);
@@ -80,6 +85,10 @@ function OrderScreen() {
   const selectedCount = Object.values(selectedItems).reduce(
     (sum, selected) => sum + selected.quantity,
     0
+  );
+
+  const filteredItems = items.filter((item) =>
+    item.name?.toLowerCase().includes(itemSearch.toLowerCase())
   );
 
   const incrementItem = (item) => {
@@ -356,17 +365,39 @@ function OrderScreen() {
           <View style={styles.modalContainer}>
             <View style={styles.modalHeader}>
               <Text style={styles.modalTitle}>Select Items</Text>
+              <TextInput
+                style={styles.searchInput}
+                placeholder="Search items..."
+                value={itemSearch}
+                onChangeText={setItemSearch}
+              />
               <Pressable onPress={() => setItemsModalVisible(false)}>
                 <Text style={styles.closeText}>X</Text>
               </Pressable>
             </View>
 
             <ScrollView>
-              {items.map((item) => {
+              {filteredItems.map((item) => {
                 const selectedQuantity = selectedItems[item._id]?.quantity || 0;
 
                 return (
                   <View key={item._id} style={styles.itemRow}>
+                    <Pressable
+                        onPress={() => {
+                          setSelectedImageItem(item);
+                          setImageModalVisible(true);
+                        }}
+                      >
+                        <Image
+                          source={{
+                            uri:
+                              item.images?.[0] ||
+                              item.imageUrl ||
+                              'https://via.placeholder.com/80',
+                          }}
+                          style={styles.itemImage}
+                        />
+                      </Pressable>
                     <View style={styles.itemInfo}>
                       <Text style={styles.itemName}>{item.name}</Text>
                       <Text style={styles.itemDetails}>
@@ -409,6 +440,40 @@ function OrderScreen() {
             >
               <Text style={styles.buttonText}>Done</Text>
             </Pressable>
+          </View>
+        </View>
+      </Modal>
+
+      <Modal visible={imageModalVisible} animationType="fade" transparent>
+        <View style={styles.imageModalBackground}>
+          <View style={styles.imageModalContainer}>
+            <Pressable
+              style={styles.imageModalClose}
+              onPress={() => {
+                setImageModalVisible(false);
+                setSelectedImageItem(null);
+              }}
+            >
+              <Text style={styles.closeText}>X</Text>
+            </Pressable>
+
+            <Text style={styles.modalTitle}>{selectedImageItem?.name}</Text>
+
+            <ScrollView horizontal pagingEnabled>
+              {(selectedImageItem?.images?.length
+                ? selectedImageItem.images
+                : [selectedImageItem?.imageUrl]
+              )
+                .filter(Boolean)
+                .map((image, index) => (
+                  <Image
+                    key={index}
+                    source={{ uri: image }}
+                    style={styles.largeImage}
+                    resizeMode="contain"
+                  />
+                ))}
+            </ScrollView>
           </View>
         </View>
       </Modal>
@@ -818,6 +883,38 @@ const styles = StyleSheet.create({
   finalAmount: {
     fontSize: 17,
     fontWeight: 'bold',
+  },
+  searchInput: {
+    backgroundColor: '#f7f7f7',
+    padding: 12,
+    borderRadius: 10,
+    marginBottom: 12,
+  },
+  itemImage: {
+    width: 58,
+    height: 58,
+    borderRadius: 10,
+    marginRight: 10,
+    backgroundColor: '#eee',
+  },
+  imageModalBackground: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.8)',
+    justifyContent: 'center',
+    padding: 20,
+  },
+  imageModalContainer: {
+    backgroundColor: 'white',
+    borderRadius: 14,
+    padding: 16,
+    maxHeight: '80%',
+  },
+  imageModalClose: {
+    alignSelf: 'flex-end',
+  },
+  largeImage: {
+    width: 300,
+    height: 400,
   },
 });
 

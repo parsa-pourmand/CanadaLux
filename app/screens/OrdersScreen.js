@@ -22,17 +22,18 @@ function OrdersScreen() {
   const [loading, setLoading] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
-  const loadOrders = async () => {
+  const loadOrders = async (showLoader = true) => {
     try {
-      setLoading(true);
+      if (showLoader) setLoading(true);
 
       const response = await getOrders();
-      setOrders(response.data);
+      setOrders(response.data.orders || response.data);
     } catch (err) {
       Alert.alert('Error', err.response?.data || 'Could not load orders.');
     } finally {
-      setLoading(false);
+      if (showLoader) setLoading(false);
     }
   };
 
@@ -41,6 +42,15 @@ function OrdersScreen() {
       loadOrders();
     }, [])
   );
+
+  const handleRefresh = async () => {
+    try {
+      setRefreshing(true);
+      await loadOrders(false);
+    } finally {
+      setRefreshing(false);
+    }
+  };
 
   const openOrderModal = (order) => {
     setSelectedOrder(order);
@@ -70,6 +80,8 @@ function OrdersScreen() {
       <FlatList
         data={orders}
         keyExtractor={(order) => order._id}
+        refreshing={refreshing}
+        onRefresh={handleRefresh}
         ListEmptyComponent={
           <Text style={styles.emptyText}>No orders found.</Text>
         }
