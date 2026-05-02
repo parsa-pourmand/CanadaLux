@@ -50,6 +50,15 @@ const items = [
         backgroundColor: colors.black,
         },
         targetScreen: "Payments",
+    },
+    {
+        id: 5, 
+        title: "Projects",
+        icon: {
+        name: "folder",
+        backgroundColor: colors.black,
+        },
+        targetScreen: "Projects",
     }
 ];
 
