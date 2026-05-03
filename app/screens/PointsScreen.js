@@ -1,44 +1,41 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { View, StyleSheet, Text } from 'react-native';
+
 import Screen from '../components/Screen';
-import ButtonComponent from '../components/ButtonComponent';
 import colors from '../config/colors';
 import BulletList from '../components/BulletList';
+import AuthContext from '../context/AuthContext';
 
-const point={
-  point:200,
-  worth:50
-}
+function PointsScreen() {
+  const { user } = useContext(AuthContext);
 
-function PointsScreen(props) {
+  const points = user?.points || 0;
+  const worth = points / 100;
+
   return (
     <Screen>
-    <View style={styles.container}>
-        <Text style={styles.point}>
-          {`${point.point}`}
-        </Text>
-         <Text style={styles.text}>
-          Available Points
-        </Text>
+      <View style={styles.container}>
+        <Text style={styles.point}>{points}</Text>
+
+        <Text style={styles.text}>Available Points</Text>
+
         <Text style={styles.text}>
-          {`Worth up to $${point.worth}`}
+          Worth up to ${worth.toFixed(2)}
         </Text>
-        <ButtonComponent
-          title="Redeem Points"
-          onPress={() => console.log('Redeem Points pressed')}
-          color="white"
-          textColor="orange"
-        />
-    </View>
-    <View style={styles.textContainer}>
+      </View>
+
+      <View style={styles.textContainer}>
         <Text style={styles.header}>How it works</Text>
-        <BulletList items={[
-          "Earn points for every purchase",
-          "100 points = $1.00 credit",
-          "Minimum 1000 points to redeem ($10)",
-          "Redeemed as store credit"
-        ]} />
-    </View>
+
+        <BulletList
+          items={[
+            'Earn points when you place orders',
+            '100 points = $1.00 credit',
+            'Points can be redeemed during checkout',
+            'Redeemed points reduce your final order amount',
+          ]}
+        />
+      </View>
     </Screen>
   );
 }
@@ -54,32 +51,32 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     padding: 10,
   },
-  point:{
+  point: {
     color: 'white',
-    fontSize: 30,
+    fontSize: 34,
     fontWeight: 'bold',
-    textAlign: 'center'
+    textAlign: 'center',
   },
-  text:{
+  text: {
     color: 'white',
     fontSize: 18,
     textAlign: 'center',
-    marginVertical: 5
+    marginVertical: 5,
   },
-  header:{
-    fontSize:22,
-    fontWeight:'bold',
-    marginBottom:10
+  header: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    marginBottom: 10,
   },
-  textContainer:{
-    marginTop:20, 
-    paddingHorizontal:20,
+  textContainer: {
+    marginTop: 20,
+    paddingHorizontal: 20,
     backgroundColor: colors.white,
-    borderRadius:15,
-    paddingVertical:15,
-    width:"90%",
-    alignSelf:"center"
-  }
+    borderRadius: 15,
+    paddingVertical: 15,
+    width: '90%',
+    alignSelf: 'center',
+  },
 });
 
 export default PointsScreen;

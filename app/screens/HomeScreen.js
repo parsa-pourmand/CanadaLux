@@ -23,6 +23,12 @@ function HomeScreen({ navigation }) {
   return (
     <ScrollView style={styles.container}>
       <CardComponent
+        title="Get a Quote"
+        subTitle="Request pricing for selected items"
+        image={require('../assets/quote.jpg')}
+        onPress={() => navigation.navigate('Quote')}
+      />
+      <CardComponent
         image={require('../assets/star.png')}
         title={`Available Points: ${points}`}
         subTitle={`worth up to $${pointsWorth.toFixed(2)}`}
