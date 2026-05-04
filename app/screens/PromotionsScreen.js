@@ -7,6 +7,9 @@ import {
   ActivityIndicator,
   Alert,
   RefreshControl,
+  Modal,
+  Pressable,
+  Image,
 } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 
@@ -18,6 +21,9 @@ function PromotionsScreen() {
   const [saleItems, setSaleItems] = useState([]);
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
+
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
 
   const calculateSalePrice = (item) => {
     const sellingPrice = Number(item.sellingPrice || 0);
@@ -33,13 +39,27 @@ function PromotionsScreen() {
     return salePrice * taxMultiplier;
   };
 
+  const getItemImages = (item) => {
+    if (item?.images?.length > 0) return item.images;
+    return [];
+  };
+
+  const openItemModal = (item) => {
+    setSelectedItem(item);
+    setModalVisible(true);
+  };
+
+  const closeItemModal = () => {
+    setSelectedItem(null);
+    setModalVisible(false);
+  };
+
   const loadPromotions = async (showLoader = true) => {
     try {
       if (showLoader) setLoading(true);
 
       const response = await getItems();
-
-      const items = response.data
+      const items = response.data;
 
       const filteredSaleItems = items.filter(
         (item) => item.onSale && Number(item.salePercentage || 0) > 0
@@ -73,6 +93,12 @@ function PromotionsScreen() {
     );
   }
 
+  const selectedOriginalPrice = Number(selectedItem?.sellingPrice || 0);
+  const selectedSalePrice = selectedItem ? calculateSalePrice(selectedItem) : 0;
+  const selectedAfterTaxPrice = selectedItem
+    ? calculateAfterTaxPrice(selectedItem)
+    : 0;
+
   return (
     <Screen style={styles.screen}>
       <ScrollView
@@ -96,10 +122,9 @@ function PromotionsScreen() {
                   image={
                     item.images?.[0]
                       ? { uri: item.images[0] }
-                      : item.imageUrl
-                      ? { uri: item.imageUrl }
                       : require('../assets/Fuse-Board.jpg')
                   }
+                  onPress={() => openItemModal(item)}
                   title={item.name}
                   subTitle={
                     <View>
@@ -128,6 +153,82 @@ function PromotionsScreen() {
           })
         )}
       </ScrollView>
+
+      <Modal visible={modalVisible} animationType="slide" transparent>
+        <View style={styles.modalBackground}>
+          <View style={styles.modalContainer}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>{selectedItem?.name}</Text>
+
+              <Pressable onPress={closeItemModal}>
+                <Text style={styles.closeText}>X</Text>
+              </Pressable>
+            </View>
+
+            <ScrollView>
+              <ScrollView horizontal pagingEnabled style={styles.imagesScroll}>
+                {getItemImages(selectedItem).length > 0 ? (
+                  getItemImages(selectedItem).map((image, index) => (
+                    <Image
+                      key={index}
+                      source={{ uri: image }}
+                      style={styles.largeImage}
+                      resizeMode="contain"
+                    />
+                  ))
+                ) : (
+                  <Image
+                    source={require('../assets/Fuse-Board.jpg')}
+                    style={styles.largeImage}
+                    resizeMode="contain"
+                  />
+                )}
+              </ScrollView>
+
+              <View style={styles.detailsBox}>
+                <Text style={styles.detailLabel}>Price</Text>
+
+                <Text>
+                  <Text style={styles.originalPrice}>
+                    ${selectedOriginalPrice.toFixed(2)}
+                  </Text>
+                  <Text>  </Text>
+                  <Text style={styles.finalPrice}>
+                    ${selectedSalePrice.toFixed(2)}
+                  </Text>
+                </Text>
+
+                <Text style={styles.saleText}>
+                  {selectedItem?.salePercentage}% off
+                </Text>
+
+                <Text style={styles.detailText}>
+                  After tax: ${selectedAfterTaxPrice.toFixed(2)}
+                </Text>
+
+                <Text style={styles.detailText}>
+                  Quantity in stock: {selectedItem?.stockQuantity || 0}
+                </Text>
+
+                {selectedItem?.description ? (
+                  <>
+                    <Text style={styles.detailLabel}>Description</Text>
+                    <Text style={styles.detailText}>
+                      {selectedItem.description}
+                    </Text>
+                  </>
+                ) : null}
+
+                {selectedItem?.hst ? (
+                  <Text style={styles.detailText}>
+                    HST: {selectedItem.hst}%
+                  </Text>
+                ) : null}
+              </View>
+            </ScrollView>
+          </View>
+        </View>
+      </Modal>
     </Screen>
   );
 }
@@ -170,6 +271,59 @@ const styles = StyleSheet.create({
   afterTaxText: {
     marginTop: 4,
     color: '#555',
+  },
+  modalBackground: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'center',
+    padding: 20,
+  },
+  modalContainer: {
+    backgroundColor: 'white',
+    borderRadius: 14,
+    padding: 20,
+    maxHeight: '85%',
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  modalTitle: {
+    flex: 1,
+    fontSize: 22,
+    fontWeight: 'bold',
+    paddingRight: 10,
+  },
+  closeText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  imagesScroll: {
+    marginTop: 16,
+  },
+  largeImage: {
+    width: 300,
+    height: 280,
+    borderRadius: 12,
+    backgroundColor: '#f1f1f1',
+  },
+  detailsBox: {
+    backgroundColor: '#f7f7f7',
+    padding: 14,
+    borderRadius: 12,
+    marginTop: 16,
+  },
+  detailLabel: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginTop: 10,
+    marginBottom: 6,
+  },
+  detailText: {
+    marginTop: 8,
+    color: '#555',
+    fontSize: 15,
   },
 });
 

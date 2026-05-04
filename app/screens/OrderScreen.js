@@ -91,6 +91,11 @@ function OrderScreen() {
     item.name?.toLowerCase().includes(itemSearch.toLowerCase())
   );
 
+  const getItemImages = (item) => {
+  if (item?.images?.length > 0) return item.images;
+  return [];
+};
+
   const incrementItem = (item) => {
     setSelectedItems((current) => {
       const currentQuantity = current[item._id]?.quantity || 0;
@@ -390,10 +395,7 @@ function OrderScreen() {
                       >
                         <Image
                           source={{
-                            uri:
-                              item.images?.[0] ||
-                              item.imageUrl ||
-                              'https://via.placeholder.com/80',
+                            uri: item.images?.[0]
                           }}
                           style={styles.itemImage}
                         />
@@ -440,40 +442,42 @@ function OrderScreen() {
             >
               <Text style={styles.buttonText}>Done</Text>
             </Pressable>
-          </View>
-        </View>
-      </Modal>
+            {imageModalVisible && (
+                <View style={styles.imageOverlay}>
+                  <View style={styles.imageOverlayContainer}>
+                    <Pressable
+                      style={styles.imageModalClose}
+                      onPress={() => {
+                        setImageModalVisible(false);
+                        setSelectedImageItem(null);
+                      }}
+                    >
+                      <Text style={styles.closeText}>X</Text>
+                    </Pressable>
 
-      <Modal visible={imageModalVisible} animationType="fade" transparent>
-        <View style={styles.imageModalBackground}>
-          <View style={styles.imageModalContainer}>
-            <Pressable
-              style={styles.imageModalClose}
-              onPress={() => {
-                setImageModalVisible(false);
-                setSelectedImageItem(null);
-              }}
-            >
-              <Text style={styles.closeText}>X</Text>
-            </Pressable>
+                    <Text style={styles.modalTitle}>{selectedImageItem?.name}</Text>
 
-            <Text style={styles.modalTitle}>{selectedImageItem?.name}</Text>
-
-            <ScrollView horizontal pagingEnabled>
-              {(selectedImageItem?.images?.length
-                ? selectedImageItem.images
-                : [selectedImageItem?.imageUrl]
-              )
-                .filter(Boolean)
-                .map((image, index) => (
-                  <Image
-                    key={index}
-                    source={{ uri: image }}
-                    style={styles.largeImage}
-                    resizeMode="contain"
-                  />
-                ))}
-            </ScrollView>
+                    {getItemImages(selectedImageItem).length > 0 ? (
+                      <ScrollView horizontal pagingEnabled>
+                        {getItemImages(selectedImageItem).map((image, index) => (
+                          <Image
+                            key={index}
+                            source={{ uri: image }}
+                            style={styles.largeImage}
+                            resizeMode="contain"
+                          />
+                        ))}
+                      </ScrollView>
+                    ) : (
+                      <Image
+                        source={require('../assets/Fuse-Board.jpg')}
+                        style={styles.largeImage}
+                        resizeMode="contain"
+                      />
+                    )}
+                  </View>
+                </View>
+              )}
           </View>
         </View>
       </Modal>
@@ -897,25 +901,30 @@ const styles = StyleSheet.create({
     marginRight: 10,
     backgroundColor: '#eee',
   },
-  imageModalBackground: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.8)',
-    justifyContent: 'center',
-    padding: 20,
-  },
-  imageModalContainer: {
-    backgroundColor: 'white',
-    borderRadius: 14,
-    padding: 16,
-    maxHeight: '80%',
-  },
   imageModalClose: {
     alignSelf: 'flex-end',
   },
-  largeImage: {
-    width: 300,
-    height: 400,
-  },
+  imageOverlay: {
+  ...StyleSheet.absoluteFillObject,
+  backgroundColor: 'rgba(0,0,0,0.85)',
+  justifyContent: 'center',
+  alignItems: 'center',
+  zIndex: 999,
+  elevation: 999,
+},
+imageOverlayContainer: {
+  backgroundColor: 'white',
+  borderRadius: 14,
+  padding: 16,
+  width: '95%',
+  height: 420,
+},
+
+largeImage: {
+  width: 300,
+  height: 300,
+  backgroundColor: '#f1f1f1',
+},
 });
 
 export default OrderScreen;
