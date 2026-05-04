@@ -1,34 +1,98 @@
-import React from 'react';
-import { View, StyleSheet, Text, FlatList, ScrollView } from 'react-native';
+import React, { useCallback, useState } from 'react';
+import {
+  View,
+  StyleSheet,
+  Text,
+  FlatList,
+  ActivityIndicator,
+  Alert,
+} from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
+
 import ListItemSeparator from '../components/list/ListItemSeparator';
+import { getPayments } from '../api/payments';
 
-const payments = [
-  { id: 1556, amount: 49.99, date: "2024-05-01", method: "Credit Card" },
-  { id: 2053, amount: 19.99, date: "2024-04-15", method: "PayPal" }
-];
+function PaymentsScreen() {
+  const [payments, setPayments] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
-function PaymentsScreen(props) {
+  const loadPayments = async (showLoader = true) => {
+    try {
+      if (showLoader) setLoading(true);
+
+      const response = await getPayments();
+      setPayments(response.data);
+    } catch (err) {
+      Alert.alert('Error', err.response?.data || 'Could not load payments.');
+    } finally {
+      if (showLoader) setLoading(false);
+    }
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      loadPayments();
+    }, [])
+  );
+
+  const handleRefresh = async () => {
+    setRefreshing(true);
+    await loadPayments(false);
+    setRefreshing(false);
+  };
+
+  const formatDate = (date) => {
+    if (!date) return 'No date';
+    return new Date(date).toLocaleDateString();
+  };
+
+  if (loading) {
+    return (
+      <View style={styles.center}>
+        <ActivityIndicator />
+      </View>
+    );
+  }
+
   return (
     <View style={styles.screen}>
-      
       <View style={[styles.row, styles.headerRow]}>
         <Text style={[styles.cell, styles.headerCell]}>Payment</Text>
         <Text style={[styles.cell, styles.headerCell]}>Date</Text>
-        <Text style={[styles.cell, styles.headerCell, styles.methodCell]}>Method</Text>
-        <Text style={[styles.cell, styles.headerCell, styles.amountCell]}>Amount</Text>
+        <Text style={[styles.cell, styles.headerCell, styles.methodCell]}>
+          Method
+        </Text>
+        <Text style={[styles.cell, styles.headerCell, styles.amountCell]}>
+          Amount
+        </Text>
       </View>
-      
+
       <FlatList
         data={payments}
-        keyExtractor={(item) => item.id.toString()}
+        keyExtractor={(item) => item._id}
+        refreshing={refreshing}
+        onRefresh={handleRefresh}
         ItemSeparatorComponent={ListItemSeparator}
+        ListEmptyComponent={
+          <Text style={styles.emptyText}>No payments found.</Text>
+        }
         renderItem={({ item }) => (
           <View style={styles.row}>
-            <Text style={styles.cell}>{item.id}</Text>
-            <Text style={styles.cell}>{item.date}</Text>
-            <Text style={[styles.cell, styles.methodCell]}>{item.method}</Text>
+            <Text style={styles.cell}>
+              {item.paymentNumber}
+            </Text>
+
+            <Text style={styles.cell}>
+              {formatDate(item.date)}
+            </Text>
+
+            <Text style={[styles.cell, styles.methodCell]}>
+              {item.method || item.method || 'N/A'}
+            </Text>
+
             <Text style={[styles.cell, styles.amountCell]}>
-              ${item.amount.toFixed(2)}
+              ${Number(item.amount || 0).toFixed(2)}
             </Text>
           </View>
         )}
@@ -37,11 +101,16 @@ function PaymentsScreen(props) {
   );
 }
 
-
 const styles = StyleSheet.create({
   screen: {
+    flex: 1,
     paddingHorizontal: 16,
     paddingTop: 20,
+  },
+  center: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   row: {
     flexDirection: 'row',
@@ -66,5 +135,11 @@ const styles = StyleSheet.create({
   methodCell: {
     paddingLeft: 12,
   },
+  emptyText: {
+    textAlign: 'center',
+    marginTop: 30,
+    color: '#666',
+  },
 });
+
 export default PaymentsScreen;
