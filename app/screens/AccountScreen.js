@@ -67,7 +67,7 @@ function AccountScreen({navigation}) {
   return (
     <View style={styles.screen}>
         <View style={styles.profileContainer}>
-            <ListItem image={user.image} title={`${user.firstName} ${user.lastName}`} subTitle={user.email}/>
+            <ListItem onPress={() => navigation.navigate("Profile")} image={user.image} title={`${user.firstName} ${user.lastName}`} subTitle={user.email}/>
         </View>
 
 

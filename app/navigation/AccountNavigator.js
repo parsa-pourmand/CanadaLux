@@ -5,12 +5,14 @@ import InvoicesScreen from "../screens/InvoicesScreen";
 import PaymentsScreen from "../screens/PaymentsScreen";
 import QuotesScreen from '../screens/QuotesScreen';
 import ProjectsScreen from '../screens/ProjectsScreen';
+import ProfileScreen from "../screens/ProfileScreen";
 
 const Stack = createNativeStackNavigator()
 
 const AccountNavigator = () => (
         <Stack.Navigator>
                 <Stack.Screen name="My Account" component={AccountScreen}/>
+                <Stack.Screen name="Profile" component={ProfileScreen}/>
                 <Stack.Screen name="Orders" component={OrdersScreen}/>
                 <Stack.Screen name="Quotes" component={QuotesScreen} />
                 <Stack.Screen name="Invoice" component={InvoicesScreen}/>
