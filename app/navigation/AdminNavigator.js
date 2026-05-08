@@ -1,0 +1,59 @@
+import React from 'react';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+
+import AdminUsersScreen from '../screens/admin/AdminUsersScreen';
+import AdminItemsScreen from '../screens/admin/AdminItemsScreen';
+import AdminFeaturedProductsScreen from '../screens/admin/AdminFeaturedProductsScreen';
+
+const Tab = createBottomTabNavigator();
+
+function AdminNavigator() {
+  return (
+    <Tab.Navigator screenOptions={{ headerShown: true }}>
+      <Tab.Screen
+        name="Users"
+        component={AdminUsersScreen}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons
+              name="account-group"
+              size={size}
+              color={color}
+            />
+          ),
+        }}
+      />
+
+      <Tab.Screen
+        name="Items"
+        component={AdminItemsScreen}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons
+              name="package-variant"
+              size={size}
+              color={color}
+            />
+          ),
+        }}
+      />
+
+      <Tab.Screen
+        name="Featured Products"
+        component={AdminFeaturedProductsScreen}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons
+              name="star"
+              size={size}
+              color={color}
+            />
+          ),
+        }}
+      />
+    </Tab.Navigator>
+  );
+}
+
+export default AdminNavigator;

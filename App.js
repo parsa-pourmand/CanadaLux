@@ -8,6 +8,7 @@ import AuthContext from './app/context/AuthContext';
 import { getToken, getUser, removeAuth } from './app/auth/storage';
 import { setAuthToken } from './app/api/client';
 import { getMe } from './app/api/users';
+import AdminNavigator from './app/navigation/AdminNavigator';
 
 export default function App() {
   const [user, setUser] = useState(null);
@@ -63,7 +64,15 @@ export default function App() {
     <SafeAreaProvider>
       <AuthContext.Provider value={{ user, setUser: logIn, logOut, refreshUser }}>
         <NavigationContainer>
-          {user ? <MainNav /> : <AuthNavigator />}
+          {user ? (
+            user?.role === 'admin' ? (
+              <AdminNavigator />
+            ) : (
+              <MainNav />
+            )
+          ) : (
+            <AuthNavigator />
+          )}
         </NavigationContainer>
       </AuthContext.Provider>
     </SafeAreaProvider>
