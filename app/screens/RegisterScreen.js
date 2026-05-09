@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { StyleSheet, Text } from 'react-native';
+import { StyleSheet, Text, ImageBackground } from 'react-native';
 import * as Yup from 'yup';
 
 import Screen from '../components/Screen';
@@ -23,8 +23,8 @@ const validationSchema = Yup.object().shape({
     .label('Confirm Password'),
   companyName: Yup.string().label('Company'),
   phoneNumber: Yup.string().required().label('Phone Number'),
-  billingAddress: Yup.string().required().label('Billing Address'),
-  shippingAddress: Yup.string().required().label('Shipping Address'),
+  billingAddress: Yup.string().label('Billing Address'),
+  shippingAddress: Yup.string().label('Shipping Address'),
 });
 
 export default function RegisterScreen() {
@@ -57,6 +57,11 @@ export default function RegisterScreen() {
   };
 
   return (
+    <ImageBackground
+          source={require("../assets/welcomeScreen.jpg")}
+          blurRadius={10}
+          style={styles.background}
+    >
     <Screen style={styles.container}>
       {error ? <Text style={styles.error}>{error}</Text> : null}
 
@@ -152,10 +157,14 @@ export default function RegisterScreen() {
         <SubmitButton title="Register" />
       </FormComponent>
     </Screen>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
+  background: {
+    flex: 1,
+  },
   container: {
     padding: 10,
   },

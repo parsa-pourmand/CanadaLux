@@ -7,12 +7,6 @@ import colors from '../config/colors';
 import ListItemSeparator from '../components/list/ListItemSeparator'
 import Screen from '../components/Screen';
 
-const user = {
-    image:require("../assets/parsa.jpeg"),
-    firstName:"Parsa",
-    lastName:"Pourmand",
-    email:"poupars89@gmail.com"
-}
 
 const items = [
     {
@@ -64,10 +58,20 @@ const items = [
 
 function AccountScreen({navigation}) {
     const authContext = useContext(AuthContext);
+
   return (
     <View style={styles.screen}>
         <View style={styles.profileContainer}>
-            <ListItem onPress={() => navigation.navigate("Profile")} image={user.image} title={`${user.firstName} ${user.lastName}`} subTitle={user.email}/>
+            <ListItem
+                onPress={() => navigation.navigate('Profile')}
+                image={
+                    authContext.user?.profileImage
+                    ? { uri: authContext.user.profileImage }
+                    : require('../assets/profile_pic.jpg')
+                }
+                title={`${authContext.user.Firstname} ${authContext.user.Lastname}`}
+                subTitle={authContext.user.email}
+            />
         </View>
 
 

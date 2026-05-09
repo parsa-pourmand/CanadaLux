@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import AuthContext from '../context/AuthContext';
-import { View, StyleSheet, Image, Text } from 'react-native';
+import { View, StyleSheet, Image, Text, ImageBackground } from 'react-native';
 import * as Yup from 'yup';
 
 import Screen from '../components/Screen';
@@ -38,51 +38,91 @@ function LoginScreen({ navigation }) {
   };
 
   return (
-    <Screen style={styles.container}>
-      <Image source={require('../assets/icon-512.png')} style={styles.logo} />
+    <ImageBackground
+          source={require("../assets/welcomeScreen.jpg")}
+          blurRadius={10}
+          style={styles.background}
+    >
+      <Screen style={styles.container}>
+          <View style={styles.topSection}>
+            <Image
+              source={require('../assets/icon-512.png')}
+              style={styles.logo}
+              resizeMode="contain"
+            />
+          </View>
 
-      {error ? <Text style={styles.error}>{error}</Text> : null}
+          <View style={styles.middleSection}>
+            {error ? <Text style={styles.error}>{error}</Text> : null}
 
-      <FormComponent
-        initialValues={{ email: '', password: '' }}
-        onSubmit={handleLogin}
-        validationSchema={validationSchema}
-      >
-        <FormFieldComponent
-          name="email"
-          icon="email"
-          placeholder="Email"
-          keyboardType="email-address"
-          textContentType="emailAddress"
-          autoCorrect={false}
-          autoCapitalize="none"
-        />
+            <FormComponent
+              initialValues={{ email: '', password: '' }}
+              onSubmit={handleLogin}
+              validationSchema={validationSchema}
+            >
+              <FormFieldComponent
+                name="email"
+                icon="email"
+                placeholder="Email"
+                keyboardType="email-address"
+                textContentType="emailAddress"
+                autoCorrect={false}
+                autoCapitalize="none"
+              />
 
-        <FormFieldComponent
-          name="password"
-          icon="lock"
-          placeholder="Password"
-          textContentType="password"
-          autoCorrect={false}
-          autoCapitalize="none"
-          secureTextEntry
-        />
+              <FormFieldComponent
+                name="password"
+                icon="lock"
+                placeholder="Password"
+                textContentType="password"
+                autoCorrect={false}
+                autoCapitalize="none"
+                secureTextEntry
+              />
 
-        <SubmitButton title="LOGIN" />
-      </FormComponent>
-    </Screen>
+              <View style={styles.loginButtonContainer}>
+                <SubmitButton title="LOGIN" />
+              </View>
+            </FormComponent>
+          </View>
+        </Screen>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
+  background: {
+    flex: 1,
+  },
+
   container: {
-    padding: 10,
+    flex: 1,
+    width: '100%',
+    paddingHorizontal: 24,
   },
+
+  topSection: {
+    flex: 1,
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    paddingTop: 10,
+  },
+
+  middleSection: {
+    flex: 2,
+    justifyContent: 'center',
+    marginBottom: 60,
+  },
+
   logo: {
-    height: 150,
-    width: 150,
-    alignSelf: 'center',
+    width: 200,
+    height: 200,
   },
+
+  loginButtonContainer: {
+    marginTop: 50,
+  },
+
   error: {
     color: 'red',
     textAlign: 'center',

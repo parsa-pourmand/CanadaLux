@@ -5,6 +5,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import AdminUsersScreen from '../screens/admin/AdminUsersScreen';
 import AdminItemsScreen from '../screens/admin/AdminItemsScreen';
 import AdminFeaturedProductsScreen from '../screens/admin/AdminFeaturedProductsScreen';
+import AdminAccountScreen from '../screens/admin/AdminAccountScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -52,6 +53,20 @@ function AdminNavigator() {
           ),
         }}
       />
+
+      <Tab.Screen
+        name="Account"
+        component={AdminAccountScreen}
+        options={{
+            tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons
+                name="account-circle"
+                size={size}
+                color={color}
+            />
+            ),
+        }}
+        />
     </Tab.Navigator>
   );
 }
