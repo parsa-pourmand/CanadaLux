@@ -6,6 +6,7 @@ import AdminUsersScreen from '../screens/admin/AdminUsersScreen';
 import AdminItemsScreen from '../screens/admin/AdminItemsScreen';
 import AdminFeaturedProductsScreen from '../screens/admin/AdminFeaturedProductsScreen';
 import AdminAccountScreen from '../screens/admin/AdminAccountScreen';
+import AdminQuotesScreen from '../screens/admin/AdminQuotesScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -40,6 +41,20 @@ function AdminNavigator() {
         }}
       />
 
+      <Tab.Screen
+        name="Quotes"
+        component={AdminQuotesScreen}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons
+              name="file-document-edit-outline"
+              size={size}
+              color={color}
+            />
+          ),
+        }}
+      />
+      
       <Tab.Screen
         name="Featured Products"
         component={AdminFeaturedProductsScreen}
