@@ -24,6 +24,12 @@
     },
     "web": {
       "favicon": "./app/assets/icon-512.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "a6111eee-0c3d-4271-8e60-50f0eea37d2d"
+      }
+    },
+    "owner": "parsa_02"
   }
 }

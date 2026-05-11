@@ -12,6 +12,9 @@ import { login } from '../api/auth';
 import { storeAuth } from '../auth/storage';
 import { setAuthToken } from '../api/client';
 
+import registerForPushNotificationsAsync from '../utils/registerForPushNotifications';
+import { savePushToken } from '../api/pushNotifications';
+
 const validationSchema = Yup.object().shape({
   email: Yup.string().required().email().label('Email'),
   password: Yup.string().required().min(5).label('Password'),
@@ -31,6 +34,16 @@ function LoginScreen({ navigation }) {
       await storeAuth(token, user);
       setAuthToken(token);
       authContext.setUser(user);
+
+      try {
+        const pushToken = await registerForPushNotificationsAsync();
+
+        if (pushToken) {
+          await savePushToken(pushToken);
+        }
+      } catch (err) {
+        console.log('Push registration failed:', err);
+      }
 
     } catch (err) {
       setError(err.response?.data || 'Login failed. Please try again.');

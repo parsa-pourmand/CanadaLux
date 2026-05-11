@@ -12,6 +12,9 @@ import { storeAuth } from '../auth/storage';
 import { setAuthToken } from '../api/client';
 import AuthContext from '../context/AuthContext';
 
+import registerForPushNotificationsAsync from '../utils/registerForPushNotifications';
+import { savePushToken } from '../api/pushNotifications';
+
 const validationSchema = Yup.object().shape({
   firstName: Yup.string().required().min(2).label('First Name'),
   lastName: Yup.string().required().min(2).label('Last Name'),
@@ -51,6 +54,16 @@ export default function RegisterScreen() {
       await storeAuth(token, user);
       setAuthToken(token);
       authContext.setUser(user);
+
+      try {
+        const pushToken = await registerForPushNotificationsAsync();
+
+        if (pushToken) {
+          await savePushToken(pushToken);
+        }
+      } catch (err) {
+        console.log('Push registration after register failed:', err);
+      }
     } catch (err) {
       setError(err.response?.data || 'Register failed. Please try again.');
     }

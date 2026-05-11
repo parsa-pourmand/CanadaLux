@@ -10,6 +10,9 @@ import { setAuthToken } from './app/api/client';
 import { getMe } from './app/api/users';
 import AdminNavigator from './app/navigation/AdminNavigator';
 
+import registerForPushNotificationsAsync from './app/utils/registerForPushNotifications';
+import { savePushToken } from './app/api/pushNotifications';
+
 export default function App() {
   const [user, setUser] = useState(null);
   const [isReady, setIsReady] = useState(false);
@@ -23,6 +26,16 @@ export default function App() {
 
         const response = await getMe();
         setUser(response.data);
+
+        try {
+          const pushToken = await registerForPushNotificationsAsync();
+
+          if (pushToken) {
+            await savePushToken(pushToken);
+          }
+        } catch (err) {
+          console.log('Push registration on app restore failed:', err);
+        }
       }
     } catch (err) {
       await removeAuth();
